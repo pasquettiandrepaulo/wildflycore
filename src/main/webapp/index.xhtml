@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Jsf Primefaces</title>
+</h:head>
+<h:body>
+
+	<f:event listener="#{controlerMB.init}" type="preRenderView" />
+
+	<h1>Hello World PrimeFaces</h1>
+	<h:form>
+		<div class="ui-fluid">
+			<p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10"
+				layout="grid" styleClass="ui-panelgrid-blank">
+				<p:inputText id="descricao" placeholder="Descricao"
+					value="#{controlerMB.tarefa.descricao}">
+
+				</p:inputText>
+
+				<p:inputText id="info" placeholder="Info"
+					value="#{controlerMB.tarefa.info}">
+
+				</p:inputText>
+
+				<p:commandButton id="salvar" value="Enviar"
+					action="#{controlerMB.salvar}" process="@all"
+					update="@this dataTableTarefas" />
+			</p:panelGrid>
+		</div>
+		<p:dataTable id="dataTableTarefas" var="tarefa" rows="10"
+			paginator="true" rowsPerPageTemplate="5,10,15"
+			widgetVar="tableTarefas" value="#{controlerMB.listaTarefa}"
+			rowKey="tarefa.id" lazy="false"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+			<p:column headerText="Id" sortBy="#{tarefa.id}"
+				filterBy="#{tarefa.id}" priority="1">
+				<h:outputText value="#{tarefa.id}" />
+			</p:column>
+
+			<p:column headerText="Nome" sortBy="#{tarefa.descricao}"
+				filterBy="#{tarefa.descricao}" priority="2">
+				<h:outputText value="#{tarefa.descricao}" />
+			</p:column>
+
+			<p:column headerText="Info" sortBy="#{tarefa.info}"
+				filterBy="#{tarefa.info}" priority="3">
+				<h:outputText value="#{tarefa.info}" />
+			</p:column>
+
+			<p:column headerText="Concluida" sortBy="#{tarefa.completa}"
+				filterMatchMode="exact" priority="4">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('tableTarefas').filter()">
+						<f:selectItem itemLabel="Select One" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="Sim" itemValue="#{true}" />
+						<f:selectItem itemLabel="Não" itemValue="#{false}" />
+					</p:selectOneMenu>
+				</f:facet>
+				<h:outputText value="#{tarefa.completa}" />
+			</p:column>
+
+			<p:column priority="5">
+				<p:commandButton value="Remover"
+					action="#{controlerMB.deletar(tarefa)}" process="@form"
+					update="@form dataTableTarefas" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</h:body>
+</html>
